@@ -1,0 +1,11 @@
+#######################################  Peloton
+- platform: rest
+  name: yourname_yearly_peloton
+  scan_interval: 300
+  unique_id: sensor.yourname_yearly_peloton
+  resource: http://192.168.xxx.xxx:8123/local/peloton_workouts.json
+  value_template: "{{ now() }}"  # Just a placeholder
+  json_attributes:
+    - peloton
+    - peloton_workouts
+#######################################
