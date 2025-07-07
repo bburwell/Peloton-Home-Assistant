@@ -18,9 +18,14 @@ Here is how I am Using Home Assistant to keep track of Peloton Workouts:
 * Some additonal notes:
   * Python file that uses pylotoncycle - https://github.com/justmedude/pylotoncycle/
   * You will need to enter your own username and password.
-  * When I first run the python file I change the code to 500 workouts - workouts_to_get = 500  and change this path output_file = "/config/www/peloton_workouts.json" so I can run it in the /config/www directory manually without it barking ->> my output_file = "peloton_workouts.json"
-  * After the first run I change  workouts_to_get = 5 and  output_file = "/config/www/peloton_workouts.json"
-  * I do this so when the automation runs it updates the json file.
+  * When I first run the python file I change the code to 500 workouts -
+  *       workouts_to_get = 500
+  * and change this path output_file = "/config/www/peloton_workouts.json" so I can run it in the /config/www directory manually without it barking ->>
+  *      output_file = "peloton_workouts.json"
+  * After the first run I change
+  *       workouts_to_get = 5 
+  *       output_file = "/config/www/peloton_workouts.json"
+  * I do this so when the automation runs it updates the json file in the /config/www directory
  
 * I know some are looking at trying to add automation for lights and music and BPM's.  I haven't gone down that path but I will give a couple of commnents:
   * First I do not know how many API calls are allowed daily for the Peloton API.  If it is unlimited then this could be easlity created.  If it is limited, which I expect it to be, you could then possibly use something like a motion detector to run the python file more frequently.
