@@ -161,7 +161,7 @@ Here is how I am Using Home Assistant to keep track of Peloton Workouts:
           ],
           "user_caption_locales": [],
           "join_tokens": {
-            "on_demand": "eyJob21lX3BlbG90b25faWQiOiBudWxsLCAicmlkZV9pZCI6ICIzY2RjZjUxMzA3ZmY0MjQzOTlmYjNiNGU0MGZkYThiZiIsICJzdHVkaW9fcGVsb3Rvbl9pZCI6IG51bGwsICJ0eXBlIjogIm9uX2RlbWFuZCJ9"
+            "on_demand": "eyJob21lX3BlbG90b25faWQiOiBudWxsLCAikaW9fcGVsb3Rvbl9pZCI6IG51bGwsICJ0eXBlIjogIm9uX2RlbWFuZCJ9"
           },
           "flags": [],
           "is_dynamic_video_eligible": false,
