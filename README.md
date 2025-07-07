@@ -13,7 +13,7 @@ Here is how I am Using Home Assistant to keep track of Peloton Workouts:
    1. A Python File.
    2. A line added to the configuration.yaml so I can call the python file ( get_peloton_rides: 'python /config/www/peloton-ridesv2.py' )
    3. An addition to the sensors.yaml file so my peloton sensor is updated (In sensors directory)
-   4. A Peloton Dashboard
+   4. A Peloton Dashboard (in the dashboards directory)
       
 * * Python file that uses pylotoncycle - https://github.com/justmedude/pylotoncycle/
   * You will need to enter your own username and password.
