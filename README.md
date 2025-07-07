@@ -26,7 +26,7 @@ Here is how I am Using Home Assistant to keep track of Peloton Workouts:
   * First I do not know how many API calls are allowed daily for the Peloton API.  If it is unlimited then this could be easlity created.  If it is limited, which I expect it to be, you could then possibly use something like a motion detector to run the python file more frequently.
   * What you would want to key off of is the status key -
   * Here is an example of whats in the json file for each workout:
-    '''
+    ```
     {
       "workout_id": "15719b8fe6d5471f9b88cff125ad2851",
       "workout_date": "2025-07-07",
@@ -194,7 +194,7 @@ Here is how I am Using Home Assistant to keep track of Peloton Workouts:
     }
   ]
 }
-''' 
+  ```
     ![image](https://github.com/user-attachments/assets/7bdf6883-66c5-4791-a875-862ba8733efd)
 
 
