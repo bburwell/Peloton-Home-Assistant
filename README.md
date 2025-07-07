@@ -26,6 +26,8 @@ Here is how I am Using Home Assistant to keep track of Peloton Workouts:
   *       workouts_to_get = 5 
   *       output_file = "/config/www/peloton_workouts.json"
   * I do this so when the automation runs it updates the json file in the /config/www directory
+  * Also - I use docker containers and Home Assistant is a container.  To run shell commands that call libraries you need to make sure that it is installed in the container - for peloton you will need to do this in the console window:
+  *      pip install pylotoncycle
  
 * I know some are looking at trying to add automation for lights and music and BPM's.  I haven't gone down that path but I will give a couple of commnents:
   * First I do not know how many API calls are allowed daily for the Peloton API.  If it is unlimited then this could be easlity created.  If it is limited, which I expect it to be, you could then possibly use something like a motion detector to run the python file more frequently.
