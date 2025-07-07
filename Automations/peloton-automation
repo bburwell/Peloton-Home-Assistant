@@ -1,0 +1,13 @@
+alias: Get Daily Peloton Workouts
+description: Get Daily Peloton
+triggers:
+  - minutes: /59
+    trigger: time_pattern
+conditions:
+  - condition: time
+    after: "00:06:00"
+    before: "20:00:00"
+actions:
+  - data: {}
+    action: shell_command.get_peloton_rides
+mode: single
