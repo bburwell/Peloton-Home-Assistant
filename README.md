@@ -24,11 +24,11 @@ Here is how I am Using Home Assistant to keep track of Peloton Workouts:
  
 * I know some are looking at trying to add automation for lights and music and BPM's.  I haven't gone down that path but I will give a couple of commnents:
   * First I do not know how many API calls are allowed daily for the Peloton API.  If it is unlimited then this could be easlity created.  If it is limited, which I expect it to be, you could then possibly use something like a motion detector to run the python file more frequently.
-  * What you would want to key off of is the status key -
+  * What you would want to key off of is the status key - "status": "IN_PROGRESS" is going on right now vs "status": "COMPLETE"
   * Here is an example of whats in the json file for each workout:
     ```
     {
-      "workout_id": "15719b8fe6d5471f9b88cff125ad2851",
+      "workout_id": "15719b81",
       "workout_date": "2025-07-07",
       "created_at": "2025-07-07T09:52:50",
       "fitness_discipline": "meditation",
@@ -53,14 +53,14 @@ Here is how I am Using Home Assistant to keep track of Peloton Workouts:
         "is_outdoor": false,
         "metrics_type": null,
         "name": "Meditation Workout",
-        "peloton_id": "f874fcaa1eef4023bf585c9436e04443",
+        "peloton_id": "f87443",
         "platform": "web",
         "start_time": 1751907169,
         "status": "IN_PROGRESS",
         "timezone": "America/Los_Angeles",
         "title": null,
         "total_work": 0.0,
-        "user_id": "6af6102049b446d1ba67fb2b3bff4058",
+        "user_id": "6af68",
         "workout_type": "class",
         "total_video_watch_time_seconds": 0,
         "total_video_buffering_seconds": 0,
@@ -108,8 +108,8 @@ Here is how I am Using Home Assistant to keep track of Peloton Workouts:
           "fitness_discipline_display_name": "Meditation",
           "has_closed_captions": true,
           "has_pedaling_metrics": false,
-          "home_peloton_id": "f622c894666f4f848a9ac89c5aa931a2",
-          "id": "3cdcf51307ff424399fb3b4e40fda8bf",
+          "home_peloton_id": "f622a2",
+          "id": "3cdcfb4e40fda8bf",
           "image_url": "https://s3.amazonaws.com/peloton-ride-images/c0c10043ca2b7a81c80b9029da2c41a0912df5de/img_1741981343_9a3163ff4a954bda834aa82c61eccca6.png",
           "instructor_id": "a8c56f162c964e9392568bc13828a3fb",
           "individual_instructor_ids": [],
