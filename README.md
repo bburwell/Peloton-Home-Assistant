@@ -201,7 +201,8 @@ Here is how I am Using Home Assistant to keep track of Peloton Workouts:
 }
   ```
 
-![image](https://github.com/user-attachments/assets/750159cc-f05a-4b9c-b837-363837576b8a)
+![image](https://github.com/user-attachments/assets/4865fb14-63d0-443d-b41e-7971d2a8e045)
+
 
 
 
