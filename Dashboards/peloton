@@ -1,0 +1,338 @@
+decluttering_templates:
+  peloton_workout_table2_gpt:
+    card:
+      type: custom:flex-table-card
+      title: '[[title]]'
+      css:
+        table+: >-
+          padding: 0px; width: 100%; border-collapse: separate; border-spacing:
+          0 5px;
+        tbody tr: >-
+          transition: all 0.3s ease; background: rgba(26, 26, 26, 0.9);
+          border-radius: 8px;
+        tbody tr:hover: >-
+          background: linear-gradient(90deg, #FF6F61, #FFB6B6); color: #1a1a1a
+          !important; transform: scale(1.02); box-shadow: 0 4px 8px rgba(0, 0,
+          0, 0.3);
+        tbody tr td: 'padding: 10px; text-align: center; border-bottom: 1px solid #333;'
+        tbody tr td:first-child: 'border-top-left-radius: 8px; border-bottom-left-radius: 8px;'
+        tbody tr td:last-child: 'border-top-right-radius: 8px; border-bottom-right-radius: 8px;'
+        .card-header: >-
+          background: linear-gradient(90deg, [[color]], #FF9999); color: white;
+          padding: 12px; font-size: 16px; font-weight: bold; border-radius: 8px
+          8px 0 0;
+        .image-cell img: 'border-radius: 5px;'
+      card_mod:
+        style:
+          .: |
+            ha-card {
+              overflow: auto;
+              border: 2px solid [[color]];
+              border-radius: 8px;
+              width: 100% !important;
+              box-sizing: border-box;
+              background: #1a1a1a;
+              box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            }
+          $: |
+            @media (max-width: 600px) {
+              .card-header {
+                font-size: 14px !important;
+                padding: 8px !important;
+              }
+              tbody tr td {
+                font-size: 12px !important;
+                padding: 6px !important;
+              }
+            }      
+      entities:
+        include: '[[entity]]'
+      columns:
+        - name: Image
+          data: '[[events]]'
+          modify: |-
+            (() => {
+              const url = x.summary?.ride?.image_url || 'https://press.onepeloton.com/assets/images/update2023/thumbs/LOGO_WHITE.jpg';
+              return `<img src="${url}" alt="Workout Image" class="image-cell" style="width: 5px; height: 5px;">`;
+            })()
+          icon: mdi:image
+          class: image-cell
+        - name: Monthly Workouts
+          data: '[[events]]'
+          modify: |-
+            (() => {
+              // Ensure x is an array of workouts
+              const workouts = Array.isArray(x) ? x : [x];
+              if (!workouts || workouts.length === 0) {
+                return "No workouts available";
+              }
+
+              // Group workouts by month and count types
+              const months = {};
+              workouts.forEach(workout => {
+                const date = new Date(workout.workout_date);
+                const monthYear = date.toLocaleString('default', { month: 'long', year: 'numeric' });
+                if (!months[monthYear]) {
+                  months[monthYear] = { workouts: [], typeCounts: {} };
+                }
+                months[monthYear].workouts.push(workout);
+                let workoutType = "Other";
+                if (workout.title.toLowerCase().includes("ride")) workoutType = "Cycling";
+                else if (workout.title.toLowerCase().includes("meditation")) workoutType = "Meditation";
+                else if (workout.title.toLowerCase().includes("yoga")) workoutType = "Yoga";
+                else if (workout.title.toLowerCase().includes("treadmill")) workoutType = "Treadmill";
+                months[monthYear].typeCounts[workoutType] = (months[monthYear].typeCounts[workoutType] || 0) + 1;
+              });
+
+              // Generate HTML for each month with a single box and continuous workout list
+              const monthSections = Object.keys(months).sort().map(monthYear => {
+                const { workouts, typeCounts } = months[monthYear];
+                const workoutList = workouts.map(workout => {
+                  const date = new Date(workout.workout_date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+                  const cadence = workout.metrics?.cadence || 'N/A';
+                  const distance = workout.metrics?.distance || 'N/A';
+                  const calories = workout.metrics?.calories || 'N/A';
+                  let workoutType = "Other";
+                  if (workout.title.toLowerCase().includes("ride")) workoutType = "Cycling";
+                  else if (workout.title.toLowerCase().includes("meditation")) workoutType = "Meditation";
+                  else if (workout.title.toLowerCase().includes("yoga")) workoutType = "Yoga";
+                  else if (workout.title.toLowerCase().includes("treadmill")) workoutType = "Treadmill";
+                  return `- Date: ${date} | Type: ${workoutType} | Workout: ${workout.title} (${workout.instructor_name}) | Cad: ${cadence} | Dist: ${distance} | Cal: ${calories}<br>`;
+                }).join('');
+                const typeSummary = Object.entries(typeCounts).map(([type, count]) => `(${count} Total ${type} Workouts)`).join(', ');
+                return `<div style="background-color: #333; color: white; padding: 5px; border-radius: 4px; margin-bottom: 10px; border: 1px solid #666;">
+                  <strong>${monthYear} (${workouts.length} total workouts, ${typeSummary})</strong>
+                  <div style="margin-top: 5px;">${workoutList}</div>
+                </div>`;
+              }).join('');
+
+              return `<div style="padding: 8px;">${monthSections}</div>`;
+            })()
+          icon: mdi:calendar-month
+  peloton_workout_table_gpt:
+    card:
+      type: custom:flex-table-card
+      title: '[[title]]'
+      css:
+        table+: >-
+          padding: 0px; width: 100%; border-collapse: separate; border-spacing:
+          0 5px;
+        tbody tr: >-
+          transition: all 0.3s ease; background: rgba(26, 26, 26, 0.9);
+          border-radius: 8px;
+        tbody tr:hover: >-
+          background: linear-gradient(90deg, #FF6F61, #FFB6B6); color: #1a1a1a
+          !important; transform: scale(1.02); box-shadow: 0 4px 8px rgba(0, 0,
+          0, 0.3);
+        tbody tr td: 'padding: 10px; text-align: center; border-bottom: 1px solid #333;'
+        tbody tr td:first-child: 'border-top-left-radius: 8px; border-bottom-left-radius: 8px;'
+        tbody tr td:last-child: 'border-top-right-radius: 8px; border-bottom-right-radius: 8px;'
+        .card-header: >-
+          background: linear-gradient(90deg, [[color]], #FF9999); color: white;
+          padding: 12px; font-size: 16px; font-weight: bold; border-radius: 8px
+          8px 0 0;
+      card_mod:
+        style:
+          .: |
+            ha-card {
+              overflow: auto;
+              border: 2px solid [[color]];
+              border-radius: 8px;
+              width: 100% !important;
+              box-sizing: border-box;
+              background: #1a1a1a;
+              box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            }
+          $: |
+            @media (max-width: 600px) {
+              .card-header {
+                font-size: 14px !important;
+                padding: 8px !important;
+              }
+              tbody tr td {
+                font-size: 12px !important;
+                padding: 6px !important;
+              }
+            }
+      sort_by: Date-
+      entities:
+        include: '[[entity]]'
+      columns:
+        - name: Date
+          data: '[[events]]'
+          modify: x.workout_date
+          hidden: true
+        - name: Image
+          data: '[[events]]'
+          modify: |-
+            (() => {
+              const url = x.summary?.ride?.image_url || 'https://press.onepeloton.com/assets/images/update2023/thumbs/LOGO_WHITE.jpg';
+              return `<img src="${url}" alt="Workout Image" class="image-cell" style="width: 50px; height: 50px;">`;
+            })()
+          icon: mdi:image
+          class: image-cell
+        - name: Date
+          data: '[[events]]'
+          modify: |-
+            (() => {
+              console.log('Input workout_date:', x.workout_date);  // Log input
+              try {
+                if (!x.workout_date || typeof x.workout_date !== 'string') {
+                  console.log('Invalid input, falling back:', x.workout_date);
+                  return x.workout_date || 'N/A';
+                }
+                const date = new Date(x.workout_date);
+                if (isNaN(date.getTime())) {
+                  console.log('Invalid date, falling back:', x.workout_date);
+                  return x.workout_date;
+                }
+                const formattedDate = date.toLocaleDateString('en-US', {
+                  month: 'long',
+                  day: 'numeric',
+                  year: 'numeric'
+                });
+                console.log('Formatted output:', formattedDate);  // Log output
+                return formattedDate;
+              } catch (error) {
+                console.log('Error processing date:', error.message, 'Falling back to:', x.workout_date);
+                return x.workout_date || 'N/A';
+              }
+            })()
+          icon: mdi:calendar
+          class: text-primary
+        - name: Fitness Type
+          data: '[[events]]'
+          modify: x.summary.fitness_discipline
+          icon: mdi:bike
+          class: text-primary
+        - name: Completed/Inprogress
+          data: '[[events]]'
+          modify: x.summary.status
+          icon: mdi:progress-check
+          class: text-primary
+        - name: Title
+          data: '[[events]]'
+          modify: x.title
+          icon: mdi:run
+          class: text-accent
+        - name: Instructor
+          data: '[[events]]'
+          modify: x.instructor_name
+          icon: mdi:account
+          class: text-info
+        - name: Duration
+          data: '[[events]]'
+          modify: |-
+            (() => {
+              const durationSec = x.duration || 0;
+              const minutes = Math.floor(durationSec / 60);
+              const seconds = durationSec % 60;
+              return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            })()
+          icon: mdi:clock
+          class: text-success
+        - name: Calories
+          data: '[[events]]'
+          modify: x.metrics.calories
+          icon: mdi:fire
+          class: text-warning
+          style:
+            color: 'rgba(255, 215, 0, {{ x.metrics.calories > 200 ? 1 : 0.5 }})'
+        - name: Cadence
+          data: '[[events]]'
+          modify: x.metrics.avg_cadence
+          icon: mdi:fire
+          class: text-warning
+          style:
+            color: 'rgba(255, 215, 0, {{ x.metrics.calories > 200 ? 1 : 0.5 }})'
+        - name: Resistance
+          data: '[[events]]'
+          modify: x.metrics.avg_power
+          icon: mdi:fire
+          class: text-warning
+          style:
+            color: 'rgba(255, 215, 0, {{ x.metrics.calories > 200 ? 1 : 0.5 }})'
+        - name: Distance
+          data: '[[events]]'
+          modify: x.metrics.distance
+          icon: mdi:fire
+          class: text-warning
+          style:
+            color: 'rgba(255, 215, 0, {{ x.metrics.calories > 200 ? 1 : 0.5 }})'
+  peloton_workout_table_gptold:
+    card:
+      type: custom:flex-table-card
+      title: '[[title]]'
+      css:
+        table+: 'padding: 0px; width: 100%;'
+        tbody tr td:first-child: 'width: 100%; text-align: left; padding: 5px;'
+        tbody tr:hover: 'background-color: black!important; color: white!important;'
+      card_mod:
+        style:
+          .: |
+            ha-card {
+              overflow: auto;
+              border: 2px solid [[color]];
+              border-radius: 8px;
+              width: 100% !important;
+              box-sizing: border-box;
+              background-color: #1a1a1a;
+              color: white;
+            }
+          $: |
+            .card-header {
+              background-color: [[color]];
+              color: white;
+              padding: 8px !important;
+              font-size: 14px !important;
+              font-weight: bold !important;
+            }
+            @media (max-width: 600px) {
+              .card-header {
+                font-size: 12px !important;
+                padding: 6px !important;
+              }
+              tbody tr td {
+                font-size: 12px !important;
+                padding: 3px !important;
+              }
+            }
+      entities:
+        include: '[[entity]]'
+      columns:
+        - name: Date
+          data: '[[events]]'
+          modify: x.workout_id
+views:
+  - theme: Backend-selected
+    title: Peloton Workout Dashboard
+    type: panel
+    icon: mdi:bike
+    badges: []
+    cards:
+      - type: horizontal-stack
+        cards:
+          - type: custom:expander-card
+            title: Peloton Workouts
+            icon: mdi:bike
+            expanded: true
+            cards:
+              - type: custom:decluttering-card
+                template: peloton_workout_table_gpt
+                variables:
+                  - title: Peloton Workouts
+                  - color: '#FF6F61'
+                  - entity: sensor.burwell_yearly_peloton
+                  - events: peloton_workouts
+          - type: custom:expander-card
+            title: Peloton Workouts
+            icon: mdi:bike
+            expanded: true
+            cards:
+              - type: custom:decluttering-card
+                template: peloton_workout_table2_gpt
+                variables:
+                  - title: Peloton Workouts
+                  - color: '#FF6F61'
+                  - entity: sensor.burwell_yearly_peloton
+                  - events: peloton_workouts
