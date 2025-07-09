@@ -1,0 +1,1 @@
+Changing things up a bit and creating 2 json files.  1 is all of the completed files and the 2nd is if a workout is IN_PROGRESS.  Looking to see if I can use this to see workouts in real time and maybe alter things like lights.
