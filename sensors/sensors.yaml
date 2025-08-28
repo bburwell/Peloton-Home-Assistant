@@ -9,3 +9,14 @@
     - peloton
     - peloton_workouts
 #######################################
+###########Personal Records############################
+- platform: rest
+  name: yourname_yearly_peloton_averages
+  scan_interval: 300
+  unique_id: sensor.yourname_yearly_peloton_averages
+  resource: http://192.168.xxx.xxx:8123/local/peloton_averages.json
+  value_template: "{{ now() }}"  # Just a placeholder
+  json_attributes:
+    - peloton_workout_averages
+    - peloton_averages
+#######################################
