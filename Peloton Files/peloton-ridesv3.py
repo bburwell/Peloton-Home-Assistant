@@ -64,38 +64,33 @@ except Exception as e:
     print(f"Failed to fetch workouts: {e}")
     exit(1)
 
-# Process workouts (update all workouts, not just new ones)
+# Process workouts
 updated_in_progress = []
 updated_workouts = []
 seen_workout_ids = set()  # Track processed workout IDs to avoid duplicates
-for workout in workouts + [w for w in existing_workouts_data["peloton_workouts"] if w.get("workout_id")]:
-    workout_id = workout["id"] if "id" in workout else workout.get("workout_id")
+for workout in workouts:  # Process only new API-fetched workouts first
+    workout_id = workout["id"]
     if workout_id in seen_workout_ids:
-        continue  # Skip duplicate workout IDs
+        continue
     seen_workout_ids.add(workout_id)
-    # Handle created_at consistently
-    created_at_value = workout.get("created_at")
-    if isinstance(created_at_value, (int, float)):  # New API data (timestamp)
-        created_at = datetime.fromtimestamp(created_at_value).isoformat()
-    elif isinstance(created_at_value, str):  # Existing JSON data (ISO string)
-        try:
-            created_at = datetime.fromisoformat(created_at_value).isoformat()
-        except ValueError:
-            created_at = datetime.now().isoformat()  # Fallback if invalid
-    else:
-        created_at = datetime.now().isoformat()  # Default fallback
-    workout_date = datetime.fromisoformat(created_at).strftime("%Y-%m-%d")  # Consistent date from created_at
-    title = workout.get("title") or workout.get("ride", {}).get("title", "Unknown")
-    instructor_name = workout.get("instructor_name") or workout.get("ride", {}).get("instructor_name", "Unknown")
     try:
-        if "id" in workout:  # New workout from API
-            metrics = conn.GetWorkoutMetricsById(workout_id)
-            summary = conn.GetWorkoutSummaryById(workout_id)
-            status = summary.get("status", "unknown").upper()
-        else:  # Existing workout
-            metrics = workout.get("metrics", {})
-            summary = workout.get("summary", {})
-            status = summary.get("status", "unknown").upper()
+        metrics = conn.GetWorkoutMetricsById(workout_id)
+        summary = conn.GetWorkoutSummaryById(workout_id)
+        status = summary.get("status", "unknown").upper()
+        # Handle created_at consistently
+        created_at_value = workout.get("created_at")
+        if isinstance(created_at_value, (int, float)):  # New API data (timestamp)
+            created_at = datetime.fromtimestamp(created_at_value).isoformat()
+        elif isinstance(created_at_value, str):  # Existing JSON data (ISO string)
+            try:
+                created_at = datetime.fromisoformat(created_at_value).isoformat()
+            except ValueError:
+                created_at = datetime.now().isoformat()  # Fallback if invalid
+        else:
+            created_at = datetime.now().isoformat()  # Default fallback
+        workout_date = datetime.fromisoformat(created_at).strftime("%Y-%m-%d")  # Consistent date from created_at
+        title = workout.get("title") or workout.get("ride", {}).get("title", "Unknown")
+        instructor_name = workout.get("instructor_name") or workout.get("ride", {}).get("instructor_name", "Unknown")
 
         avg_metrics = {m["display_name"]: m["value"] for m in metrics.get("average_summaries", []) if isinstance(metrics, dict)} or {}
         sum_metrics = {m["display_name"]: m["value"] for m in metrics.get("summaries", []) if isinstance(metrics, dict)} or {}
@@ -198,6 +193,13 @@ for workout in workouts + [w for w in existing_workouts_data["peloton_workouts"]
     except Exception as e:
         print(f"Failed to process workout {workout_id}: {e}")
         continue
+
+# Append existing workouts that weren’t fetched by the API
+for workout in existing_workouts_data["peloton_workouts"]:
+    workout_id = workout.get("workout_id")
+    if workout_id not in seen_workout_ids:
+        updated_workouts.append(workout)
+        print(f"Reusing existing workout: {workout_id} | {workout.get('created_at', 'Unknown')} | {workout.get('title', 'Unknown')}")
 
 # Update in-progress if no new match, keep the last one
 if not updated_in_progress and in_progress_data["peloton_workouts"]:
